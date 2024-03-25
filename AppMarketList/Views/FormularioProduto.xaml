@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AppMarketList.Views.FormularioProduto"
-             Title="Binding caso Novo ou Editar">
+             Title="{Binding Descricao}">
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Salvar" Clicked="ToolbarItem_Clicked"/>
@@ -11,13 +11,13 @@
     <ContentPage.Content>
         <VerticalStackLayout>
             <Label Text="Descrição: "/>
-            <Entry x:Name="txt_descricao" Placeholder="Ex: Produto #1"/>
+            <Entry x:Name="txt_descricao" Placeholder="Ex: Produto #1" Text="{Binding Descricao}"/>
 
             <Label Text="Quantidade: "/>
-            <Entry x:Name="txt_quantidade" Placeholder="Ex: 2"/>
+            <Entry x:Name="txt_quantidade" Placeholder="Ex: 2" Text="{Binding Quantidade}"/>
 
             <Label Text="Valor Unit: "/>
-            <Entry x:Name="txt_preco" Placeholder="Ex: 1,90"/>
+            <Entry x:Name="txt_preco" Placeholder="Ex: 1,90" Text="{Binding Preco}"/>
         </VerticalStackLayout>
     </ContentPage.Content>
 </ContentPage>

@@ -20,37 +20,41 @@ namespace AppMarketList
             DisplayAlert("Resultado",$"A somatória de sua lista é equivalente a: {somador:C}", "Concluído");
         }
 
-        private async void btn_Add_Clicked(object sender, EventArgs e)
+        private  void btn_Add_Clicked(object sender, EventArgs e)
         {
-            await Shell.Current.GoToAsync("//FormularioProduto");
+            //await Navigation.PushAsync(new Views.FormularioProduto());
+
+            Navigation.PushAsync(new Views.FormularioProduto
+            {
+                BindingContext = "Criação de produto"
+            });
         }
 
-        protected override void OnAppearing()
+        protected async override void OnAppearing()
         {
-           if(list_products.Count > 0)
+           if(list_products.Count == 0)
             {
-                Task.Run(async () => {
+              
                     List<Produto> tmp = await App.Db.SelectAll();
                     foreach (Produto p in tmp)
                     {
                         list_products.Add(p);
                     }
-                });
+                
             }
         }
 
-        private void txt_search_TextChanged(object sender, TextChangedEventArgs e)
+        private async void txt_search_TextChanged(object sender, TextChangedEventArgs e)
         {
             string q = e.NewTextValue;
             list_products.Clear();
-            Task.Run(async () =>
-            {
+          
                 List<Produto> tmp = await App.Db.SearchProduct(q);
                 foreach (Produto p in tmp)
                 {
                     list_products.Add(p);
                 }
-            });
+            
         }
 
         private void ref_carregando_Refreshing(object sender, EventArgs e)
@@ -69,7 +73,12 @@ namespace AppMarketList
 
         private void lst_produtos_ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
+            Produto? p = e.SelectedItem as Produto;
 
+            Navigation.PushAsync(new Views.FormularioProduto
+            {
+                BindingContext = p
+            });
         }
 
         private async void MenuItem_Clicked_Remover(object sender, EventArgs e)
@@ -82,8 +91,9 @@ namespace AppMarketList
 
                 if(confirm)
                 {
-                    await App.Db.Delete(1);
+                    await App.Db.Delete(p.Id);
                     await DisplayAlert("Sucesso", "O item foi removido da lista!", "OK");
+                    list_products.Remove(p);
                 }
             }catch (Exception ex)
             {
