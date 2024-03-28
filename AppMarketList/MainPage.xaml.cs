@@ -20,14 +20,11 @@ namespace AppMarketList
             DisplayAlert("Resultado",$"A somatória de sua lista é equivalente a: {somador:C}", "Concluído");
         }
 
-        private  void btn_Add_Clicked(object sender, EventArgs e)
+        private async void btn_Add_Clicked(object sender, EventArgs e)
         {
-            //await Navigation.PushAsync(new Views.FormularioProduto());
+            await Navigation.PushAsync(new Views.NovoProduto());
 
-            Navigation.PushAsync(new Views.FormularioProduto
-            {
-                BindingContext = "Criação de produto"
-            });
+            
         }
 
         protected async override void OnAppearing()
@@ -71,11 +68,11 @@ namespace AppMarketList
             ref_carregando.IsRefreshing = false;
         }
 
-        private void lst_produtos_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+        private async void lst_produtos_ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
             Produto? p = e.SelectedItem as Produto;
 
-            Navigation.PushAsync(new Views.FormularioProduto
+            await Navigation.PushAsync(new Views.EditarProduto
             {
                 BindingContext = p
             });
@@ -87,12 +84,12 @@ namespace AppMarketList
             {
                 MenuItem selected = (MenuItem)sender;
                 Produto p = selected.BindingContext as Produto;
-                bool confirm = await DisplayAlert("Tem certeza?", "Remover produto?", "Confimrar", "Cancelar");
+                bool confirm = await DisplayAlert("Tem certeza?", $"Remover produto {p.Descricao}", "Confirmar", "Cancelar");
 
                 if(confirm)
                 {
                     await App.Db.Delete(p.Id);
-                    await DisplayAlert("Sucesso", "O item foi removido da lista!", "OK");
+                    await DisplayAlert("Sucesso", $"O item {p.Descricao} foi removido da lista!", "OK");
                     list_products.Remove(p);
                 }
             }catch (Exception ex)
